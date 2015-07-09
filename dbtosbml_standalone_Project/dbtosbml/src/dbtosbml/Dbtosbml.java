@@ -48,7 +48,13 @@ public class Dbtosbml {
             user = "root" ;
             password = "root" ;
             dbname = "sbmldb2" ;
-            filepath = "F:/Files/extractedbm/" ;
+            
+             /**
+             * Path to extract the SBML files from database, where cwd is "github\db2sbml\dbtosbml_standalone_Project\dbtosbml" so add a folder in this directory
+             * and mention folder name instead of extractedbm folder
+             */
+            
+            filepath = cwd + "\\extractedbm\\" ;
         }
         
         else
