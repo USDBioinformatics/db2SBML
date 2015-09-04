@@ -16,6 +16,63 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `bioelement`
+--
+
+DROP TABLE IF EXISTS `bioelement`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bioelement` (
+  `id` varchar(100) NOT NULL,
+  `name` varchar(200) DEFAULT NULL,
+  `descr` varchar(200) DEFAULT NULL,
+  `ref` varchar(200) DEFAULT NULL,
+  `uri` varchar(200) DEFAULT NULL,
+  `type` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `bioelement_has_expcond`
+--
+
+DROP TABLE IF EXISTS `bioelement_has_expcond`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bioelement_has_expcond` (
+  `bioelement_id` varchar(100) NOT NULL,
+  `expcond_id` varchar(100) NOT NULL,
+  `ref` varchar(200) DEFAULT NULL,
+  `value` double NOT NULL DEFAULT '0',
+  `unit` double DEFAULT NULL,
+  PRIMARY KEY (`bioelement_id`,`expcond_id`,`value`),
+  KEY `fk_bioelement_has_expcond_expcond1_idx` (`expcond_id`),
+  KEY `fk_bioelement_has_expcond_bioelement_idx` (`bioelement_id`),
+  CONSTRAINT `fk_bioelement_has_expcond_bioelement` FOREIGN KEY (`bioelement_id`) REFERENCES `bioelement` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bioelement_has_expcond_expcond1` FOREIGN KEY (`expcond_id`) REFERENCES `expcond` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `bioelement_has_model`
+--
+
+DROP TABLE IF EXISTS `bioelement_has_model`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bioelement_has_model` (
+  `bioelement_id` varchar(100) NOT NULL,
+  `model_id` varchar(100) NOT NULL,
+  PRIMARY KEY (`bioelement_id`,`model_id`),
+  KEY `fk_bioelement_has_model_model1_idx` (`model_id`),
+  KEY `fk_bioelement_has_model_bioelement1_idx` (`bioelement_id`),
+  CONSTRAINT `fk_bioelement_has_model_bioelement1` FOREIGN KEY (`bioelement_id`) REFERENCES `bioelement` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bioelement_has_model_model1` FOREIGN KEY (`model_id`) REFERENCES `model` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `compartment`
 --
 
@@ -90,6 +147,23 @@ CREATE TABLE `eventassignment` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `expcond`
+--
+
+DROP TABLE IF EXISTS `expcond`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `expcond` (
+  `id` varchar(100) NOT NULL,
+  `name` varchar(200) DEFAULT NULL,
+  `descr` varchar(200) DEFAULT NULL,
+  `ref` varchar(200) DEFAULT NULL,
+  `uri_efo` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `functiondefinition`
 --
 
@@ -97,7 +171,7 @@ DROP TABLE IF EXISTS `functiondefinition`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `functiondefinition` (
-  `id` varchar(45) NOT NULL,
+  `id` varchar(100) NOT NULL,
   `xmlns` longtext,
   `annotation` longtext,
   `model_id` varchar(100) NOT NULL,
@@ -125,7 +199,6 @@ CREATE TABLE `initialassignment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 --
 -- Table structure for table `kineticlaw`
 --
@@ -137,12 +210,13 @@ CREATE TABLE `kineticlaw` (
   `kid` varchar(45) NOT NULL,
   `math` longtext,
   `annotation` longtext NOT NULL,
-  `reaction_id` varchar(45) NOT NULL,
+  `reaction_id` varchar(100) NOT NULL,
   PRIMARY KEY (`kid`,`reaction_id`),
   KEY `fk_kineticlaw_reaction1_idx` (`reaction_id`),
   CONSTRAINT `fk_kineticlaw_reaction1` FOREIGN KEY (`reaction_id`) REFERENCES `reaction` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
 --
 -- Table structure for table `listofunitdefinitions`
 --
@@ -207,7 +281,7 @@ DROP TABLE IF EXISTS `model`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `model` (
-  `id` varchar(100) NOT NULL,
+  `id` varchar(200) NOT NULL,
   `name` longtext,
   `notes` longtext,
   `substanceUnits` int(11) DEFAULT NULL,
@@ -237,7 +311,7 @@ CREATE TABLE `modifierspeciesreference` (
   `sboTerm` varchar(45) DEFAULT NULL,
   `speciestype` varchar(45) DEFAULT NULL,
   `annotation` longtext,
-  `reaction_id` varchar(45) NOT NULL,
+  `reaction_id` varchar(100) NOT NULL,
   PRIMARY KEY (`species`,`reaction_id`),
   KEY `fk_modifierspeciesreference_reaction1_idx` (`reaction_id`),
   CONSTRAINT `fk_modifierspeciesreference_reaction1` FOREIGN KEY (`reaction_id`) REFERENCES `reaction` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -252,7 +326,7 @@ DROP TABLE IF EXISTS `parameter`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `parameter` (
-  `id` varchar(45) NOT NULL,
+  `id` varchar(100) NOT NULL,
   `name` varchar(200) DEFAULT NULL,
   `value` double DEFAULT NULL,
   `units` varchar(45) DEFAULT NULL,
@@ -281,7 +355,6 @@ CREATE TABLE `priority` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 --
 -- Table structure for table `reaction`
 --
@@ -290,7 +363,7 @@ DROP TABLE IF EXISTS `reaction`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `reaction` (
-  `id` varchar(45) NOT NULL,
+  `id` varchar(100) NOT NULL,
   `name` varchar(250) DEFAULT NULL,
   `reversible` tinyint(1) DEFAULT NULL,
   `fast` tinyint(1) DEFAULT NULL,
@@ -303,7 +376,6 @@ CREATE TABLE `reaction` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 --
 -- Table structure for table `rules`
 --
@@ -312,7 +384,7 @@ DROP TABLE IF EXISTS `rules`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `rules` (
-  `id` varchar(45) NOT NULL,
+  `id` varchar(100) NOT NULL,
   `math` longtext,
   `ruletype` varchar(45) DEFAULT NULL,
   `variable` varchar(45) DEFAULT NULL,
@@ -355,7 +427,6 @@ CREATE TABLE `sbml` (
   PRIMARY KEY (`level`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
 
 --
 -- Table structure for table `sbmlconstraint`
@@ -408,7 +479,7 @@ CREATE TABLE `simplespeciesreference` (
   `speciestype` varchar(45) NOT NULL,
   `constant` tinyint(1) DEFAULT NULL,
   `annotation` longtext,
-  `reaction_id` varchar(45) NOT NULL,
+  `reaction_id` varchar(100) NOT NULL,
   PRIMARY KEY (`species`,`speciestype`,`reaction_id`),
   KEY `fk_simplespeciesreference_reaction1_idx` (`reaction_id`),
   CONSTRAINT `fk_simplespeciesreference_reaction1` FOREIGN KEY (`reaction_id`) REFERENCES `reaction` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -451,7 +522,7 @@ DROP TABLE IF EXISTS `speciestype`;
 CREATE TABLE `speciestype` (
   `id` int(11) NOT NULL,
   `type` varchar(45) DEFAULT NULL,
-  `reaction_id` varchar(45) NOT NULL,
+  `reaction_id` varchar(100) NOT NULL,
   PRIMARY KEY (`id`,`reaction_id`),
   KEY `fk_speciestype_reaction1_idx` (`reaction_id`),
   CONSTRAINT `fk_speciestype_reaction1` FOREIGN KEY (`reaction_id`) REFERENCES `reaction` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -476,7 +547,6 @@ CREATE TABLE `unit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 --
 -- Table structure for table `unitdefinition`
 --
@@ -492,75 +562,14 @@ CREATE TABLE `unitdefinition` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
--- -----------------------------------------------------
--- Table expcond`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `expcond` (
-  `id` VARCHAR(100) NOT NULL,
-  `name` VARCHAR(200) NULL,
-  `descr` VARCHAR(200) NULL,
-  `ref` VARCHAR(200) NULL,
-  `uri_efo` VARCHAR(200) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-
--- -----------------------------------------------------
--- Table `bioelement`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bioelement` (
-  `id` VARCHAR(100) NOT NULL,
-  `name` VARCHAR(200) NULL,
-  `descr` VARCHAR(200) NULL,
-  `ref` VARCHAR(200) NULL,
-  `uri` VARCHAR(200) NULL,
-  `type` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `bioelement_has_expcond`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bioelement_has_expcond` (
-  `bioelement_id` VARCHAR(100) NOT NULL,
-  `expcond_id` VARCHAR(100) NOT NULL,
-  `ref` VARCHAR(200) NULL,
-  `value` INT NULL,
-  `unit` INT NULL,
-  PRIMARY KEY (`bioelement_id`, `expcond_id`,`value`),
-  INDEX `fk_bioelement_has_expcond_expcond1_idx` (`expcond_id` ASC),
-  INDEX `fk_bioelement_has_expcond_bioelement_idx` (`bioelement_id` ASC),
-  CONSTRAINT `fk_bioelement_has_expcond_bioelement`
-    FOREIGN KEY (`bioelement_id`)
-    REFERENCES `bioelement` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_bioelement_has_expcond_expcond1`
-    FOREIGN KEY (`expcond_id`)
-    REFERENCES `expcond` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `bioelement_has_model`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `bioelement_has_model` (
-  `bioelement_id` VARCHAR(100) NOT NULL,
-  `model_id` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`bioelement_id`, `model_id`),
-  INDEX `fk_bioelement_has_model_model1_idx` (`model_id` ASC),
-  INDEX `fk_bioelement_has_model_bioelement1_idx` (`bioelement_id` ASC),
-  CONSTRAINT `fk_bioelement_has_model_bioelement1`
-    FOREIGN KEY (`bioelement_id`)
-    REFERENCES `bioelement` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_bioelement_has_model_model1`
-    FOREIGN KEY (`model_id`)
-    REFERENCES `sbmldb2`.`model` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+-- Dump completed on 2015-09-04 11:13:51
